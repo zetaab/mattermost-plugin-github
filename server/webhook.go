@@ -56,42 +56,44 @@ func (p *Plugin) handleWebhook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	allowPrivate := config.EnablePrivateRepo
+
 	switch event := event.(type) {
 	case *github.PullRequestEvent:
-		if !event.GetRepo().GetPrivate() {
+		if !event.GetRepo().GetPrivate() || allowPrivate {
 			p.postPullRequestEvent(event)
 			p.handlePullRequestNotification(event)
 		}
 	case *github.IssuesEvent:
-		if !event.GetRepo().GetPrivate() {
+		if !event.GetRepo().GetPrivate() || allowPrivate {
 			p.postIssueEvent(event)
 			p.handleIssueNotification(event)
 		}
 	case *github.IssueCommentEvent:
-		if !event.GetRepo().GetPrivate() {
+		if !event.GetRepo().GetPrivate() || allowPrivate {
 			p.postIssueCommentEvent(event)
 			p.handleCommentMentionNotification(event)
 			p.handleCommentAuthorNotification(event)
 		}
 	case *github.PullRequestReviewEvent:
-		if !event.GetRepo().GetPrivate() {
+		if !event.GetRepo().GetPrivate() || allowPrivate {
 			p.postPullRequestReviewEvent(event)
 			p.handlePullRequestReviewNotification(event)
 		}
 	case *github.PullRequestReviewCommentEvent:
-		if !event.GetRepo().GetPrivate() {
+		if !event.GetRepo().GetPrivate() || allowPrivate {
 			p.postPullRequestReviewCommentEvent(event)
 		}
 	case *github.PushEvent:
-		if !event.GetRepo().GetPrivate() {
+		if !event.GetRepo().GetPrivate() || allowPrivate {
 			p.postPushEvent(event)
 		}
 	case *github.CreateEvent:
-		if !event.GetRepo().GetPrivate() {
+		if !event.GetRepo().GetPrivate() || allowPrivate {
 			p.postCreateEvent(event)
 		}
 	case *github.DeleteEvent:
-		if !event.GetRepo().GetPrivate() {
+		if !event.GetRepo().GetPrivate() || allowPrivate {
 			p.postDeleteEvent(event)
 		}
 	}
