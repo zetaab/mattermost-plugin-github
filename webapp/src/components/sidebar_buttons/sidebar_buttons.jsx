@@ -35,6 +35,7 @@ export default class SidebarButtons extends React.PureComponent {
     componentDidMount() {
         if (this.props.connected) {
             this.getData();
+            setInterval(() => this.getData(), 1000 * 60 * 5)
         }
     }
 
